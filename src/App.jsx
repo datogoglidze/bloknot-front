@@ -24,11 +24,11 @@ const NotesPage = () => {
   };
 
   return (
-      <div>
-        <h1>Notes</h1>
-        <CreateNotes onNoteCreated={handleNoteCreated} />
-        <ReadNotes notes={notes} />
-      </div>
+    <div>
+      <h1>Notes</h1>
+      <CreateNotes onNoteCreated={handleNoteCreated} />
+      <ReadNotes notes={notes} />
+    </div>
   );
 };
 

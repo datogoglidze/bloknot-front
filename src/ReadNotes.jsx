@@ -1,40 +1,81 @@
-import "react";
 import PropTypes from "prop-types";
+import {
+  Table,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+  Typography,
+} from "@mui/material";
 
-const ReadNotes = ({ notes }) => {
+const ReadNotes = ({ notes, error }) => {
+  // Add validation check for notes array
+  const validNotes = Array.isArray(notes) ? notes : [];
+
+  if (error) {
+    return (
+      <Typography variant="body1" color="error" textAlign="center">
+        {error}
+      </Typography>
+    );
+  }
+
+  if (!validNotes.length) {
+    return (
+      <Typography variant="body1" color="text.secondary" textAlign="center">
+        No notes available.
+      </Typography>
+    );
+  }
+
   return (
-    <table>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Title</th>
-          <th>Content</th>
-          <th>Date</th>
-        </tr>
-      </thead>
-      <tbody>
-        {notes.map((note) => (
-          <tr key={note.id}>
-            <td>{note.id}</td>
-            <td>{note.title || "No Title"}</td>
-            <td>{note.content}</td>
-            <td>{new Date(parseInt(note.date) * 1000).toLocaleString()}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <Table>
+      <TableHead>
+        <TableRow>
+          <TableCell>ID</TableCell>
+          <TableCell>Title</TableCell>
+          <TableCell>Content</TableCell>
+          <TableCell>Date</TableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {validNotes.map((note) => {
+          // Add null check for each note
+          if (!note || typeof note !== "object") return null;
+
+          return (
+            <TableRow key={note.id || "unknown"}>
+              <TableCell>{note.id || "N/A"}</TableCell>
+              <TableCell>{note.title || "No Title"}</TableCell>
+              <TableCell>{note.content || "No Content"}</TableCell>
+              <TableCell>
+                {note.date
+                  ? new Date(parseInt(note.date) * 1000).toLocaleString()
+                  : "No Date"}
+              </TableCell>
+            </TableRow>
+          );
+        })}
+      </TableBody>
+    </Table>
   );
 };
 
 ReadNotes.propTypes = {
   notes: PropTypes.arrayOf(
     PropTypes.shape({
-      id: PropTypes.string.isRequired,
+      id: PropTypes.string,
       title: PropTypes.string,
-      content: PropTypes.string.isRequired,
-      date: PropTypes.string.isRequired,
+      content: PropTypes.string,
+      date: PropTypes.string,
     }),
-  ).isRequired,
+  ),
+  error: PropTypes.string,
+};
+
+ReadNotes.defaultProps = {
+  notes: [],
+  error: null,
 };
 
 export default ReadNotes;

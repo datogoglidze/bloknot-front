@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { Container, Card, Typography, Box } from "@mui/material";
 import CreateNotes from "./CreateNotes.jsx";
 import ReadNotes from "./ReadNotes.jsx";
 
@@ -9,7 +10,10 @@ const NotesPage = () => {
   const fetchNotes = async () => {
     try {
       const response = await axios.get("http://localhost:8000/notes");
-      setNotes(response.data.data.notes);
+      console.log("Fetched notes:", response.data); // Debug log
+      if (response.data && response.data.data && response.data.data.notes) {
+        setNotes(response.data.data.notes);
+      }
     } catch (error) {
       console.error("Error fetching notes:", error);
     }
@@ -20,15 +24,32 @@ const NotesPage = () => {
   }, []);
 
   const handleNoteCreated = (newNote) => {
-    setNotes((prevNotes) => [newNote, ...prevNotes]);
+    console.log("New note created:", newNote); // Debug log
+    // Refresh the notes list after creating a new note
+    fetchNotes();
   };
 
   return (
-    <div>
-      <h1>Notes</h1>
-      <CreateNotes onNoteCreated={handleNoteCreated} />
-      <ReadNotes notes={notes} />
-    </div>
+    <Container maxWidth="md">
+      <Box
+        sx={{
+          width: "100%",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <Typography variant="h3" component="h1" gutterBottom>
+          Notes
+        </Typography>
+        <Card sx={{ width: "100%", p: 3, mb: 3 }}>
+          <CreateNotes onNoteCreated={handleNoteCreated} />
+        </Card>
+        <Card sx={{ width: "100%", p: 3 }}>
+          <ReadNotes notes={notes} />
+        </Card>
+      </Box>
+    </Container>
   );
 };
 

@@ -24,13 +24,12 @@ const CreateNotes = ({ onNoteCreated }) => {
         title: title.trim() || null,
       });
 
-      console.log("Response from server:", response.data); // Debug log
+      console.log("Response from server:", response.data);
 
       setContent("");
       setTitle("");
       setIsSubmitting(false);
 
-      // Call the parent's callback with the new note
       if (onNoteCreated && response.data && response.data.note) {
         onNoteCreated(response.data.note);
       }

@@ -9,7 +9,6 @@ import {
 } from "@mui/material";
 
 const ReadNotes = ({ notes, error }) => {
-  // Add validation check for notes array
   const validNotes = Array.isArray(notes) ? notes : [];
 
   if (error) {
@@ -40,7 +39,6 @@ const ReadNotes = ({ notes, error }) => {
       </TableHead>
       <TableBody>
         {validNotes.map((note) => {
-          // Add null check for each note
           if (!note || typeof note !== "object") return null;
 
           return (

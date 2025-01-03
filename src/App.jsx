@@ -10,7 +10,7 @@ const NotesPage = () => {
   const fetchNotes = async () => {
     try {
       const response = await axios.get("http://localhost:8000/notes");
-      console.log("Fetched notes:", response.data); // Debug log
+      console.log("Fetched notes:", response.data);
       if (response.data && response.data.data && response.data.data.notes) {
         setNotes(response.data.data.notes);
       }
@@ -24,8 +24,7 @@ const NotesPage = () => {
   }, []);
 
   const handleNoteCreated = (newNote) => {
-    console.log("New note created:", newNote); // Debug log
-    // Refresh the notes list after creating a new note
+    console.log("New note created:", newNote);
     fetchNotes();
   };
 

@@ -6,9 +6,11 @@ import {
   TableRow,
   TableCell,
   Typography,
+  IconButton,
 } from "@mui/material";
+import { Close as CloseIcon } from "@mui/icons-material";
 
-const ReadNotes = ({ notes, error }) => {
+const ReadNotes = ({ notes, error, onDelete }) => {
   const validNotes = Array.isArray(notes) ? notes : [];
 
   if (error) {
@@ -35,6 +37,7 @@ const ReadNotes = ({ notes, error }) => {
           <TableCell>Title</TableCell>
           <TableCell>Content</TableCell>
           <TableCell>Date</TableCell>
+          <TableCell>Actions</TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
@@ -50,6 +53,15 @@ const ReadNotes = ({ notes, error }) => {
                 {note.date
                   ? new Date(parseInt(note.date) * 1000).toLocaleString()
                   : "No Date"}
+              </TableCell>
+              <TableCell>
+                <IconButton
+                  size="small"
+                  onClick={() => onDelete(note.id)}
+                  aria-label="delete"
+                >
+                  <CloseIcon fontSize="small" />
+                </IconButton>
               </TableCell>
             </TableRow>
           );
@@ -69,6 +81,7 @@ ReadNotes.propTypes = {
     }),
   ),
   error: PropTypes.string,
+  onDelete: PropTypes.func.isRequired,
 };
 
 ReadNotes.defaultProps = {

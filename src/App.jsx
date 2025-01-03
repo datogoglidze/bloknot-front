@@ -28,6 +28,17 @@ const NotesPage = () => {
     fetchNotes();
   };
 
+  const handleNoteDelete = async (noteId) => {
+    try {
+      await axios.delete(`http://localhost:8000/notes/${noteId}`);
+      console.log("Note deleted:", noteId);
+      fetchNotes();
+    } catch (error) {
+      console.error("Error deleting note:", error);
+      alert("Failed to delete note.");
+    }
+  };
+
   return (
     <Container maxWidth="md">
       <Box
@@ -45,7 +56,7 @@ const NotesPage = () => {
           <CreateNotes onNoteCreated={handleNoteCreated} />
         </Card>
         <Card sx={{ width: "100%", p: 3 }}>
-          <ReadNotes notes={notes} />
+          <ReadNotes notes={notes} onDelete={handleNoteDelete} />
         </Card>
       </Box>
     </Container>

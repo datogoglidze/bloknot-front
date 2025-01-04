@@ -1,12 +1,11 @@
 import { useState } from "react";
-import axios from "axios";
 import { TextField, Button, Box } from "@mui/material";
 import PropTypes from "prop-types";
+import { createNote } from "./api/Notes.js";
 
 const CreateNotes = ({ onNoteCreated }) => {
   const [content, setContent] = useState("");
   const [title, setTitle] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -16,27 +15,21 @@ const CreateNotes = ({ onNoteCreated }) => {
       return;
     }
 
-    setIsSubmitting(true);
-
     try {
-      const response = await axios.post("http://localhost:8000/notes", {
+      const response = await createNote({
         content: content.trim(),
-        title: title.trim() || null,
+        title: title.trim(),
       });
 
-      console.log("Response from server:", response.data);
+      if (response.code === 201) {
+        setContent("");
+        setTitle("");
 
-      setContent("");
-      setTitle("");
-      setIsSubmitting(false);
-
-      if (onNoteCreated && response.data && response.data.note) {
         onNoteCreated(response.data.note);
       }
     } catch (error) {
-      console.error("Error creating note:", error);
       alert("Failed to create note.");
-      setIsSubmitting(false);
+      console.error("Error creating note:", error);
     }
   };
 
@@ -53,7 +46,6 @@ const CreateNotes = ({ onNoteCreated }) => {
         variant="outlined"
         placeholder="Optional title"
         fullWidth
-        disabled={isSubmitting}
       />
       <TextField
         label="Content"
@@ -65,16 +57,9 @@ const CreateNotes = ({ onNoteCreated }) => {
         rows={4}
         fullWidth
         required
-        disabled={isSubmitting}
       />
-      <Button
-        type="submit"
-        variant="contained"
-        color="primary"
-        size="large"
-        disabled={isSubmitting}
-      >
-        {isSubmitting ? "Creating..." : "Create Note"}
+      <Button type="submit" variant="contained" color="primary" size="large">
+        {"Create Note"}
       </Button>
     </Box>
   );

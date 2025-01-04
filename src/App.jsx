@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import { Container, Card, Typography, Box } from "@mui/material";
 import CreateNotes from "./CreateNotes.jsx";
 import ReadNotes from "./ReadNotes.jsx";
@@ -11,21 +10,19 @@ const NotesPage = () => {
   const fetchNotes = async () => {
     getNotes()
       .then((notes) => setNotes(notes))
-      .catch((error) => console.log("Could not retrieve orders", error));
+      .catch((error) => console.log("Could not retrieve notes", error));
   };
 
   useEffect(() => {
     fetchNotes();
   }, []);
 
-  const handleNoteCreated = (newNote) => {
-    console.log("New note created:", newNote);
+  const handleNoteCreated = () => {
     fetchNotes();
   };
 
   const handleNoteDelete = async (noteId) => {
     await deleteNote(noteId);
-    console.log("Note deleted:", noteId);
     fetchNotes();
   };
 

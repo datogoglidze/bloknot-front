@@ -10,16 +10,8 @@ import {
 } from "@mui/material";
 import { Close as CloseIcon } from "@mui/icons-material";
 
-const ReadNotes = ({ notes, error, onDelete }) => {
+const ReadNotes = ({ notes, onDelete }) => {
   const validNotes = Array.isArray(notes) ? notes : [];
-
-  if (error) {
-    return (
-      <Typography variant="body1" color="error" textAlign="center">
-        {error}
-      </Typography>
-    );
-  }
 
   if (!validNotes.length) {
     return (
@@ -33,7 +25,6 @@ const ReadNotes = ({ notes, error, onDelete }) => {
     <Table>
       <TableHead>
         <TableRow>
-          <TableCell>ID</TableCell>
           <TableCell>Title</TableCell>
           <TableCell>Content</TableCell>
           <TableCell>Date</TableCell>
@@ -46,12 +37,21 @@ const ReadNotes = ({ notes, error, onDelete }) => {
 
           return (
             <TableRow key={note.id || "unknown"}>
-              <TableCell>{note.id || "N/A"}</TableCell>
               <TableCell>{note.title || "No Title"}</TableCell>
               <TableCell>{note.content || "No Content"}</TableCell>
               <TableCell>
                 {note.date
-                  ? new Date(parseInt(note.date) * 1000).toLocaleString()
+                  ? new Date(parseInt(note.date) * 1000).toLocaleString(
+                      "en-GB",
+                      {
+                        hour12: false,
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      },
+                    )
                   : "No Date"}
               </TableCell>
               <TableCell>

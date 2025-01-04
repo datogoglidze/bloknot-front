@@ -28,8 +28,7 @@ const CreateNotes = ({ onNoteCreated }) => {
         onNoteCreated(response.data.note);
       }
     } catch (error) {
-      alert("Failed to create note.");
-      console.error("Error creating note:", error);
+      alert(error.message || "Error creating note.");
     }
   };
 

@@ -3,20 +3,15 @@ import axios from "axios";
 import { Container, Card, Typography, Box } from "@mui/material";
 import CreateNotes from "./CreateNotes.jsx";
 import ReadNotes from "./ReadNotes.jsx";
+import { deleteNote, getNotes } from "./api/Notes.js";
 
 const NotesPage = () => {
   const [notes, setNotes] = useState([]);
 
   const fetchNotes = async () => {
-    try {
-      const response = await axios.get("http://localhost:8000/notes");
-      console.log("Fetched notes:", response.data);
-      if (response.data && response.data.data && response.data.data.notes) {
-        setNotes(response.data.data.notes);
-      }
-    } catch (error) {
-      console.error("Error fetching notes:", error);
-    }
+    getNotes()
+      .then((notes) => setNotes(notes))
+      .catch((error) => console.log("Could not retrieve orders", error));
   };
 
   useEffect(() => {
@@ -29,14 +24,9 @@ const NotesPage = () => {
   };
 
   const handleNoteDelete = async (noteId) => {
-    try {
-      await axios.delete(`http://localhost:8000/notes/${noteId}`);
-      console.log("Note deleted:", noteId);
-      fetchNotes();
-    } catch (error) {
-      console.error("Error deleting note:", error);
-      alert("Failed to delete note.");
-    }
+    await deleteNote(noteId);
+    console.log("Note deleted:", noteId);
+    fetchNotes();
   };
 
   return (

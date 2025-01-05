@@ -5,6 +5,10 @@ import {
   Button,
   Card,
   Container,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   IconButton,
   Table,
   TableBody,
@@ -55,6 +59,7 @@ const CreateNote = ({ onNoteCreated }) => {
         label="Title"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
+        autoComplete="off"
         variant="outlined"
         placeholder="Optional title"
         fullWidth
@@ -63,6 +68,7 @@ const CreateNote = ({ onNoteCreated }) => {
         label="Content"
         value={content}
         onChange={(e) => setContent(e.target.value)}
+        autoComplete="off"
         variant="outlined"
         placeholder="Note content"
         multiline
@@ -88,6 +94,14 @@ CreateNote.propTypes = {
 };
 
 const ReadNotes = ({ notes, onDelete }) => {
+  const [selectedNote, setSelectedNote] = useState("");
+
+  const truncateContent = (content) => {
+    const words = content.split(" ");
+    if (words.length <= 10) return content;
+    return words.slice(0, 10).join(" ") + "...";
+  };
+
   if (!notes.length) {
     return (
       <Typography variant="body1" color="text.secondary" textAlign="center">
@@ -97,52 +111,102 @@ const ReadNotes = ({ notes, onDelete }) => {
   }
 
   return (
-    <Table>
-      <TableHead>
-        <TableRow>
-          <TableCell>Title</TableCell>
-          <TableCell>Content</TableCell>
-          <TableCell>Date</TableCell>
-          <TableCell>Actions</TableCell>
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        {notes.map((note) => {
-          if (!note || typeof note !== "object") return null;
+    <div>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>Title</TableCell>
+            <TableCell>Content</TableCell>
+            <TableCell>Date</TableCell>
+            <TableCell>Actions</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {notes.map((note) => {
+            if (!note || typeof note !== "object") return null;
 
-          return (
-            <TableRow key={note.id}>
-              <TableCell>{note.title || "No Title"}</TableCell>
-              <TableCell>{note.content || "No Content"}</TableCell>
-              <TableCell>
-                {note.date
-                  ? new Date(parseInt(note.date) * 1000).toLocaleString(
-                      "en-GB",
-                      {
-                        hour12: false,
-                        day: "2-digit",
-                        month: "2-digit",
-                        year: "numeric",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      },
-                    )
-                  : "No Date"}
-              </TableCell>
-              <TableCell>
-                <IconButton
-                  size="small"
-                  onClick={() => onDelete(note.id)}
-                  aria-label="delete"
-                >
-                  <CloseIcon fontSize="small" />
-                </IconButton>
-              </TableCell>
-            </TableRow>
-          );
-        })}
-      </TableBody>
-    </Table>
+            const contentWords = note.content ? note.content.split(" ") : [];
+            const isLongContent = contentWords.length > 10;
+
+            return (
+              <TableRow key={note.id}>
+                <TableCell>{note.title || "Untitled"}</TableCell>
+                <TableCell>
+                  {isLongContent ? (
+                    <Button
+                      onClick={() => setSelectedNote(note)}
+                      sx={{ textAlign: "left", textTransform: "none" }}
+                    >
+                      {truncateContent(note.content)}
+                    </Button>
+                  ) : (
+                    note.content
+                  )}
+                </TableCell>
+                <TableCell>
+                  {note.date
+                    ? new Date(parseInt(note.date) * 1000).toLocaleString(
+                        "en-GB",
+                        {
+                          hour12: false,
+                          day: "2-digit",
+                          month: "2-digit",
+                          year: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        },
+                      )
+                    : "No Date"}
+                </TableCell>
+                <TableCell>
+                  <IconButton
+                    size="small"
+                    onClick={() => onDelete(note.id)}
+                    aria-label="delete"
+                  >
+                    <CloseIcon fontSize="small" />
+                  </IconButton>
+                </TableCell>
+              </TableRow>
+            );
+          })}
+        </TableBody>
+      </Table>
+
+      <Dialog
+        open={Boolean(selectedNote)}
+        onClose={() => setSelectedNote("")}
+        scroll={"paper"}
+        maxWidth="md"
+        fullWidth
+      >
+        <DialogTitle variant="h5">
+          {selectedNote.title || "Untitled"}
+        </DialogTitle>
+        <IconButton
+          onClick={() => setSelectedNote("")}
+          sx={{ position: "absolute", right: 8, top: 8 }}
+          aria-label="close"
+        >
+          <CloseIcon />
+        </IconButton>
+        <DialogContent
+          sx={{
+            whiteSpace: "pre-wrap",
+            textAlign: "justify",
+            m: 2,
+          }}
+          dividers={true}
+        >
+          {selectedNote.content}
+        </DialogContent>
+        <DialogActions>
+          <Button variant="contained" onClick={() => setSelectedNote("")}>
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </div>
   );
 };
 

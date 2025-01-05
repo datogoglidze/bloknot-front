@@ -12,6 +12,15 @@ const theme = createTheme({
   typography: {
     fontFamily: "Roboto, Arial, sans-serif",
   },
+  components: {
+    MuiTableCell: {
+      styleOverrides: {
+        root: {
+          textAlign: "center",
+        },
+      },
+    },
+  },
 });
 
 export default theme;

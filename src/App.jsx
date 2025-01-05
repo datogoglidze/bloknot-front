@@ -1,53 +1,15 @@
-import { useState, useEffect } from "react";
-import { Container, Card, Typography, Box } from "@mui/material";
-import CreateNotes from "./CreateNotes.jsx";
-import ReadNotes from "./ReadNotes.jsx";
-import { deleteNote, getNotes } from "./api/Notes.js";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import "./App.css";
+import NotesPage from "./NotesPage.jsx";
 
-const NotesPage = () => {
-  const [notes, setNotes] = useState([]);
-
-  const fetchNotes = async () => {
-    getNotes()
-      .then((notes) => setNotes(notes))
-      .catch((error) => console.log("Could not retrieve notes", error));
-  };
-
-  useEffect(() => {
-    fetchNotes();
-  }, []);
-
-  const handleNoteCreated = () => {
-    fetchNotes();
-  };
-
-  const handleNoteDelete = async (noteId) => {
-    await deleteNote(noteId);
-    fetchNotes();
-  };
-
+function App() {
   return (
-    <Container maxWidth="md">
-      <Box
-        sx={{
-          width: "100%",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
-        <Typography variant="h3" component="h1" gutterBottom>
-          Notes
-        </Typography>
-        <Card sx={{ width: "100%", p: 3, mb: 3 }}>
-          <CreateNotes onNoteCreated={handleNoteCreated} />
-        </Card>
-        <Card sx={{ width: "100%", p: 3 }}>
-          <ReadNotes notes={notes} onDelete={handleNoteDelete} />
-        </Card>
-      </Box>
-    </Container>
+    <Router>
+      <Routes>
+        <Route path="/" element={<NotesPage />} />
+      </Routes>
+    </Router>
   );
-};
+}
 
-export default NotesPage;
+export default App;

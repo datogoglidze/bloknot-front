@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-import NotesPage from "./Notes.jsx";
+import NotesPage from "./pages/Notes.jsx";
 
 function App() {
   return (

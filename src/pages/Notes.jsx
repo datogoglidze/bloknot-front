@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { createNote, deleteNote, getNotes } from "./api/Notes.js";
+import { createNote, deleteNote, getNotes } from "../api/Notes.js";
 import {
   Box,
   Button,

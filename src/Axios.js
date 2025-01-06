@@ -3,7 +3,7 @@ import axios from "axios";
 let setGlobalError;
 
 const apiClient = axios.create({
-  baseURL: "http://localhost:8000",
+  baseURL: import.meta.env.VITE_BACKEND_API || "http://localhost:8000",
   withCredentials: true,
 });
 

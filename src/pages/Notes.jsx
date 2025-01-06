@@ -118,7 +118,7 @@ const ReadNotes = ({ notes, onDelete }) => {
             <TableCell>Title</TableCell>
             <TableCell>Content</TableCell>
             <TableCell>Date</TableCell>
-            <TableCell>Actions</TableCell>
+            <TableCell></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -152,8 +152,6 @@ const ReadNotes = ({ notes, onDelete }) => {
                           day: "2-digit",
                           month: "2-digit",
                           year: "numeric",
-                          hour: "2-digit",
-                          minute: "2-digit",
                         },
                       )
                     : "No Date"}
@@ -182,6 +180,20 @@ const ReadNotes = ({ notes, onDelete }) => {
       >
         <DialogTitle variant="h5">
           {selectedNote.title || "Untitled"}
+          <Typography component="span" color="text.secondary" sx={{ ml: 1 }}>
+            {"  "}
+            {selectedNote.date
+              ? new Date(parseInt(selectedNote.date) * 1000).toLocaleString(
+                  "en-GB",
+                  {
+                    hour12: false,
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
+                  },
+                )
+              : "No Date"}
+          </Typography>
         </DialogTitle>
         <IconButton
           onClick={() => setSelectedNote("")}
